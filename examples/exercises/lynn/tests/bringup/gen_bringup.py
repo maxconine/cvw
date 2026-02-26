@@ -7,27 +7,27 @@
 #  in the order they should execute.
 # ─────────────────────────────────────────────
 TESTS = [
-    # "add_test",
-    # "or_test",
-    # "and_test",
-    # "sub_test",
-    # "addi_test",
-    # "subi_test",
-    # "lw_test",
-    # "sw_test",
-    # "slt_test",
-    # "xor_test",
-    # "slti_test",
-    # "xori_test",
-    # "ori_test",
-    # "andi_test",
-    # "beq_test",
-    # "jal_test",
-    # "lui_test",
-    # "auipc_test",
-    # "sll_test",
-    # "sra_test",
-    # "srl_test",
+    "add_test",
+    "or_test",
+    "and_test",
+    "sub_test",
+    "addi_test",
+    "subi_test",
+    "lw_test",
+    "sw_test",
+    "slt_test",
+    "xor_test",
+    "slti_test",
+    "xori_test",
+    "ori_test",
+    "andi_test",
+    "beq_test",
+    "jal_test",
+    "lui_test",
+    "auipc_test",
+    "sll_test",
+    "sra_test",
+    "srl_test",
     "sb_test",
     "lb_test",  # covers lbu
     "lh_test",  # covers lhu
@@ -36,6 +36,10 @@ TESTS = [
     "blt_test",  # covers bltu
     "bge_test",  # covers bgeu
     "jalr_test",
+    "slli_test",
+    "sltiu_test",
+    "sltu_test",
+    "srli_test",
 ]
 
 # ─────────────────────────────────────────────
@@ -70,7 +74,11 @@ FAIL_CODES = {
     "bne_test": 2000,
     "blt_test": 2100,
     "bge_test": 2200,
-    "jalr_test": 2300,
+    "jalr_test": 2300,  # might be a slight issue in this. mostly works.
+    "slli_test": 1411,
+    "sltiu_test": 1421,
+    "sltu_test": 1431,
+    "srli_test": 1441,
 }
 
 OUTPUT_FILE = "tests/bringup/bringup.S"

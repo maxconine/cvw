@@ -4,14 +4,15 @@
 
 module ifu(
         input   logic           clk, reset,
-        input   logic           PCSrc,
-        input   logic [31:0]    IEUAdr,
+        input   logic [1:0]     PCSrc,
+        input   logic [31:0]    IEUAdr, ImmExt,
         output  logic [31:0]    PC, PCPlus4
     );
 
     logic [31:0] PCNext;
     // next PC logic
     logic [31:0] entry_addr;
+    logic [31:0] PCTarget;
 
     initial begin
         // default
@@ -29,5 +30,11 @@ module ifu(
     end
 
     adder pcadd4(PC, 32'd4, PCPlus4);
-    mux2 #(32) pcmux(PCPlus4, IEUAdr, PCSrc, PCNext);
+    // mux2 #(32) pcmux(PCPlus4, IEUAdr, PCSrc, PCNext);
+    // 00: Normal execution (PC + 4)
+    // 01: Branches and JAL (PC + Imm)
+    // 10: JALR (ALUResult/IEUAdr)
+    assign PCTarget = PC + ImmExt;
+
+    mux3 #(32) pcmux(PCPlus4, PCTarget, (IEUAdr & 32'hFFFFFFFE), PCSrc, PCNext);
 endmodule

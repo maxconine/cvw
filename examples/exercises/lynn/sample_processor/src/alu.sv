@@ -19,7 +19,7 @@ module alu(
     // Add or subtract
     assign CondInvb = Sub ? ~SrcB : SrcB;
     assign Sum = SrcA + CondInvb + {{(31){1'b0}}, Sub};
-    assign IEUAdr = Sum; // Send this out to IFU and LSU
+    assign IEUAdr = Sum;
 
     // Set less than based on subtraction result
     assign Overflow = (SrcA[31] ^ SrcB[31]) & (SrcA[31] ^ Sum[31]);

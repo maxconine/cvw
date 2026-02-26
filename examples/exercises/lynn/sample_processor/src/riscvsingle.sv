@@ -20,13 +20,13 @@ module riscvsingle (
         output  logic [3:0]     WriteByteEn  // strobes, 1 hot stating weather a byte should be written on a store
     );
 
-    logic [31:0] PCPlus4;
-    logic PCSrc;
+    logic [31:0] PCPlus4, ImmExt;
+    logic [1:0] PCSrc;
     logic Load;
 
-    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .PC, .PCPlus4);
+    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .ImmExt, .PC, .PCPlus4);
     ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .PCSrc, .WriteByteEn,
-            .IEUAdr, .WriteData, .ReadData, .MemEn
+            .IEUAdr, .WriteData, .ImmExt, .ReadData, .MemEn
         );
 
     assign WriteEn = |WriteByteEn;

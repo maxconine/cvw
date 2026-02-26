@@ -60,21 +60,25 @@ module testbench;
     if (~reset) begin
 
       $display("PC: %h \t Instr: %h", PC, Instr);
+      $display("MemEn: %b", MemEn);
+      $display("DataAdr: %h, t0: %h", DataAdr, dut.ieu.dp.rf.rf[5]);
 
-      $display("MemEn: %b",
-              MemEn
-              );
+      // --- ADDED JALR DEBUGGING STATEMENTS ---
+      // 1. What does the controller and IFU want to do?
+      $display("  -> Jump: %b \t PCSrc: %b", dut.ieu.c.Jump, dut.ieu.PCSrc);
 
-      $display("DataAdr: %h, t0: %h",
-              DataAdr,
-              dut.ieu.dp.rf.rf[5]
-              );
+      // 2. What is being written to the register file? (Should be PC+4 for JALR)
+      $display("  -> RegWrite: %b \t Result (to Reg): %h", dut.ieu.dp.RegWrite, dut.ieu.dp.Result);
+
+      // 3. What is actually inside the return address (ra/x1) and test target (t1/x6)?
+      $display("  -> ra: %h \t t1: %h", dut.ieu.dp.rf.rf[1], dut.ieu.dp.rf.rf[6]);
+      $display("------------------------------------------------------");
 
       // terminate program as it exited program space
       if (Instr === 'x) begin
         $display("Instruction data x (PC: %h)", PC);
         $finish(-1);
-    end
+      end
 
     end
 

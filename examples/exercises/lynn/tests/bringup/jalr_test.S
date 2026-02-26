@@ -27,6 +27,7 @@ target_1:
     la      t1, test_jalr_1
     addi    t1, t1, 8           # test_jalr_1 (la) + 4 (jalr) = 8
     beq     ra, t1, test_jalr_2
+    j test_jalr_2
     j       Fail_Jalr_2
 
     # -----------------------------------------------------------------

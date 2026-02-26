@@ -13,12 +13,11 @@ module datapath(
         output  logic           Eq, Lt, Ltu,
         input   logic [31:0]    PC, PCPlus4,
         input   logic [31:0]    Instr,
-        output  logic [31:0]    IEUAdr, WriteData,
+        output  logic [31:0]    IEUAdr, WriteData, ImmExt,
         output  logic [3:0]     WriteByteEn,
         input   logic [31:0]    ReadData
     );
 
-    logic [31:0] ImmExt;
     logic [31:0] R1, R2, SrcA, SrcB;
     logic [31:0] ALUResult, IEUResult, Result;
     logic [31:0] FormattedReadData;
@@ -51,5 +50,6 @@ module datapath(
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
     mux2 #(32) resultmux(IEUResult, FormattedReadData, ResultSrc, Result);
+
 
 endmodule
