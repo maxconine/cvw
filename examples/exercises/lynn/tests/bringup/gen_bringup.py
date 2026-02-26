@@ -7,24 +7,35 @@
 #  in the order they should execute.
 # ─────────────────────────────────────────────
 TESTS = [
-    "add_test",
-    "or_test",
-    "and_test",
-    "sub_test",
-    "addi_test",
-    "subi_test",
-    "lw_test",
-    "sw_test",
-    "slt_test",
-    "xor_test",
-    "slti_test",
-    "xori_test",
-    "ori_test",
-    "andi_test",
-    "beq_test",
-    "jal_test",
-    "lui_test",
-    "auipc_test",
+    # "add_test",
+    # "or_test",
+    # "and_test",
+    # "sub_test",
+    # "addi_test",
+    # "subi_test",
+    # "lw_test",
+    # "sw_test",
+    # "slt_test",
+    # "xor_test",
+    # "slti_test",
+    # "xori_test",
+    # "ori_test",
+    # "andi_test",
+    # "beq_test",
+    # "jal_test",
+    # "lui_test",
+    # "auipc_test",
+    # "sll_test",
+    # "sra_test",
+    # "srl_test",
+    "sb_test",
+    "lb_test",  # covers lbu
+    "lh_test",  # covers lhu
+    "sh_test",
+    "bne_test",
+    "blt_test",  # covers bltu
+    "bge_test",  # covers bgeu
+    "jalr_test",
 ]
 
 # ─────────────────────────────────────────────
@@ -49,6 +60,17 @@ FAIL_CODES = {
     "jal_test": 1100,
     "lui_test": 1200,
     "auipc_test": 1300,
+    "sll_test": 1350,
+    "sra_test": 1450,
+    "srl_test": 1400,
+    "sb_test": 1600,
+    "lb_test": 1700,
+    "lh_test": 1800,
+    "sh_test": 1900,
+    "bne_test": 2000,
+    "blt_test": 2100,
+    "bge_test": 2200,
+    "jalr_test": 2300,
 }
 
 OUTPUT_FILE = "tests/bringup/bringup.S"

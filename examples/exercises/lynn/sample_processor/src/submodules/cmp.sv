@@ -1,11 +1,15 @@
 // riscvsingle.sv
 // RISC-V single-cycle processor
 // David_Harris@hmc.edu 2020
-
 module cmp(
-        input   logic [31:0]    R1, R2,
-        output  logic           Eq
-    );
+    input  logic [31:0] R1, R2,
+    output logic        Eq,
+    output logic        Lt,  // Signed Less Than
+    output logic        Ltu  // Unsigned Less Than
+);
 
-    assign Eq = (R1 == R2);
+    assign Eq  = (R1 == R2);
+    assign Lt  = ($signed(R1) < $signed(R2));
+    assign Ltu = (R1 < R2);
+
 endmodule

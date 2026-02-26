@@ -6,14 +6,14 @@
 
 module controller(
         input   logic [6:0]   Op,
-        input   logic         Eq,
+        input   logic         Eq, Lt, Ltu,
         input   logic [2:0]   Funct3,
         input   logic         Funct7b5,
         output  logic         ALUResultSrc,
         output  logic         ResultSrc,
-        output  logic [3:0]   WriteByteEn,
         output  logic         PCSrc,
         output  logic         RegWrite,
+        output  logic         MemWrite,
         output  logic [2:0]   ALUSrc,
         output  logic [2:0]   ImmSrc,
         output  logic [1:0]   ALUControl,
@@ -23,9 +23,8 @@ module controller(
     `endif
     );
 
-    logic Branch, Jump;
+    logic Branch, TakeBranch, Jump;
     logic Sub, ALUOp;
-    logic MemWrite;
     logic [13:0] controls;
 
     // Main decoder
@@ -36,6 +35,8 @@ module controller(
             7'b0100011: controls = 15'b0_001_001_0_0_1_0_0_0_1; // sw
             7'b0110011: controls = 15'b1_xxx_000_1_0_0_0_0_0_0; // R-type
             7'b0010011: controls = 15'b1_000_001_1_0_0_0_0_0_0; // I-type ALU
+            7'b0000011: controls = 15'b1_000_001_0_0_0_1_0_0_1; // ALL LOADS (lb, lh, lw, lbu, lhu)
+            7'b0100011: controls = 15'b0_001_001_0_0_1_0_0_0_1; // ALL STORES (sb, sh, sw)
             7'b1100011: controls = 15'b0_010_011_0_0_0_0_1_0_0; // beq
             7'b1101111: controls = 15'b1_011_011_0_1_0_0_0_1_0; // jal
             7'b0110111: controls = 15'b1_100_101_0_0_0_0_0_0_0; // lui
@@ -61,8 +62,17 @@ module controller(
     assign ALUControl = {Sub, ALUOp};
 
     // PCSrc logic
-    assign PCSrc = Branch & Eq | Jump;
+    always_comb begin
+        case (Funct3)
+            3'b000: TakeBranch = Eq;            // BEQ
+            3'b001: TakeBranch = !Eq;           // BNE
+            3'b100: TakeBranch = Lt;            // BLT
+            3'b101: TakeBranch = !Lt;           // BGE
+            3'b110: TakeBranch = Ltu;           // BLTU
+            3'b111: TakeBranch = !Ltu;          // BGEU
+            default: TakeBranch = 1'b0;
+        endcase
+    end
+    assign PCSrc = (Branch & TakeBranch) | Jump;
 
-    // MemWrite logic
-    assign WriteByteEn = {(4){MemWrite}}; // currently assigns all 4 bytes to MemWrite
 endmodule
