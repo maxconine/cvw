@@ -6,9 +6,9 @@ module datapath(
         input   logic           clk, reset,
         input   logic [2:0]     Funct3,
         input   logic           ALUResultSrc, ResultSrc,
-        input   logic [1:0]     ALUSrc,
+        input   logic [2:0]     ALUSrc,
         input   logic           RegWrite,
-        input   logic [1:0]     ImmSrc,
+        input   logic [2:0]     ImmSrc,
         input   logic [1:0]     ALUControl,
         output  logic           Eq,
         input   logic [31:0]    PC, PCPlus4,
@@ -30,10 +30,11 @@ module datapath(
     // ALU logic
     cmp cmp(.R1, .R2, .Eq);
 
-    mux2 #(32) srcamux(R1, PC, ALUSrc[1], SrcA);
+    // mux2 #(32) srcamux(R1, PC, ALUSrc[1], SrcA);
+    mux3 #(32) srcamux(R1, PC, 32'b0, ALUSrc[2:1], SrcA); // added 3rd input for lui/auipc
     mux2 #(32) srcbmux(R2, ImmExt, ALUSrc[0], SrcB);
 
-    alu alu(.SrcA, .SrcB, .ALUControl, .Funct3, .ALUResult, .IEUAdr);
+    alu alu(.SrcA, .SrcB, .ALUControl, .Funct3, .Funct7_5(Instr[30]), .ALUResult, .IEUAdr);
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
     mux2 #(32) resultmux(IEUResult, ReadData, ResultSrc, Result);

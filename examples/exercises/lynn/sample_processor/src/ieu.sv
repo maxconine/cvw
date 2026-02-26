@@ -16,7 +16,8 @@ module ieu(
     );
 
     logic RegWrite, Jump, Eq, ALUResultSrc, ResultSrc;
-    logic [1:0] ALUSrc, ImmSrc;
+    logic [2:0] ALUSrc;
+    logic [2:0] ImmSrc;
     logic [1:0] ALUControl;
 
     controller c(.Op(Instr[6:0]), .Funct3(Instr[14:12]), .Funct7b5(Instr[30]), .Eq,

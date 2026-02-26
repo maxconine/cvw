@@ -15,7 +15,7 @@ xor_test:
  li t0, 0xF0 # 11110000
  li t1, 0x0F # 00001111
  xor t2, t0, t1 # Result should be 0xFF (11111111)
- beq x0, x0, pass
+ // beq x0, x0, pass
  li t3, 0xFF
  beq t2, t3, test2
  j Fail_Xor_1

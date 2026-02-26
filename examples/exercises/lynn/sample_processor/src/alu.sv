@@ -6,6 +6,7 @@ module alu(
         input   logic [31:0]    SrcA, SrcB,
         input   logic [1:0]     ALUControl,
         input   logic [2:0]     Funct3,
+        input   logic           Funct7_5, // Bit 5 of funct7 for distinguishing sra/srl
         output  logic [31:0]    ALUResult, IEUAdr
     );
 
@@ -25,12 +26,25 @@ module alu(
     assign Neg = Sum[31];
     assign LT = Neg ^ Overflow;
     assign SLT = {31'b0, LT};
+    assign LT_Unsigned = (SrcA < SrcB); // Simple and efficient for synthesis
+    assign SLTU = {31'b0, LT_Unsigned};
     assign ALUFunct = Funct3 & {3{ALUOp}}; // Force ALUFunct to 0 to Add when ALUOp = 0
 
     always_comb begin
         case (ALUFunct)
             3'b000: ALUResult = Sum; // add or sub
+            3'b001: ALUResult = SrcA << SrcB[4:0]; // sll
             3'b010: ALUResult = SLT; // slt
+            3'b011: ALUResult = SLTU; // sltu (unsigned)
+            3'b100: ALUResult = SrcA ^ SrcB; // xor
+            3'b101: begin
+                if (Funct7_5)
+                    // SRA: Arithmetic shift (preserves sign bit)
+                    ALUResult = $signed(SrcA) >>> SrcB[4:0];
+                else
+                    // SRL: Logical shift (fills with zeros)
+                    ALUResult = SrcA >> SrcB[4:0];
+            end
             3'b110: ALUResult = SrcA | SrcB; // or
             3'b111: ALUResult = SrcA & SrcB; // and
             default: ALUResult = 'x;
